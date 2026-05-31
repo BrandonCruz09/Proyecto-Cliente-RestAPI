@@ -1,0 +1,505 @@
+DOCUMENTACION COMPLETA DEL PROYECTO
+Sistema CRUD de Empleados y Clientes
+
+Ruta del proyecto:
+
+    C:\Users\baapa\Desktop\proyecto_Servidor
+
+
+1. DESCRIPCION GENERAL
+
+Este proyecto es un sistema CRUD para administrar empleados y clientes.
+
+CRUD significa:
+
+    C = Create  = Crear registros
+    R = Read    = Consultar registros
+    U = Update  = Actualizar registros
+    D = Delete  = Eliminar registros
+
+El sistema esta formado por:
+
+    1. Backend o servidor API en Go.
+    2. Cliente de escritorio en Go.
+    3. Base de datos PostgreSQL.
+    4. Docker y Docker Compose.
+    5. GitHub Actions para validar el proyecto.
+    6. Documentacion y pruebas manuales.
+
+
+2. TECNOLOGIAS USADAS
+
+Go:
+
+    Se usa para programar la API y la app de escritorio.
+
+PostgreSQL:
+
+    Se usa como base de datos relacional.
+
+Docker:
+
+    Se usa para ejecutar PostgreSQL y la API en contenedores.
+
+Docker Compose:
+
+    Se usa para levantar varios contenedores con un solo comando.
+
+JSON:
+
+    Se usa como formato de comunicacion entre el cliente y la API.
+
+Git:
+
+    Se usa para controlar versiones del codigo.
+
+GitHub:
+
+    Se usa para subir el proyecto a internet y colaborar entre integrantes.
+
+GitHub Actions:
+
+    Se usa para validar automaticamente que el backend y frontend compilen.
+
+
+3. ARQUITECTURA DEL SISTEMA
+
+El sistema funciona asi:
+
+    Usuario
+       |
+       v
+    Cliente de escritorio Go
+       |
+       | HTTP + JSON
+       v
+    API REST Go
+       |
+       | SQL
+       v
+    PostgreSQL
+
+Explicacion:
+
+    1. El usuario abre la app de escritorio.
+    2. El usuario crea, busca, actualiza o elimina empleados/clientes.
+    3. La app envia una peticion HTTP a la API.
+    4. La API recibe la peticion y ejecuta SQL.
+    5. PostgreSQL guarda o devuelve informacion.
+    6. La API responde en JSON.
+    7. La app muestra el resultado en pantalla.
+
+
+4. ESTRUCTURA DE CARPETAS
+
+proyecto_Servidor/
+|
+|-- backend/
+|   |-- main.go
+|   |-- go.mod
+|   |-- go.sum
+|   |-- Dockerfile
+|
+|-- frontend/
+|   |-- main.go
+|   |-- go.mod
+|   |-- go.sum
+|   |-- cliente-sistema.exe
+|
+|-- database/
+|   |-- init.sql
+|
+|-- docker/
+|   |-- README.md
+|
+|-- .github/
+|   |-- workflows/
+|       |-- ci.yml
+|
+|-- docker-compose.yml
+|-- .env
+|-- .gitignore
+|-- README.md
+|-- pruebas.http
+|-- DOCUMENTACION_COMPLETA_PROYECTO.txt
+|-- GUIA_GITHUB_CMD_EQUIPO.txt
+
+
+5. EXPLICACION DE CADA CARPETA
+
+backend/
+
+    Contiene la API REST hecha en Go.
+    Esta API recibe peticiones como GET, POST, PUT y DELETE.
+    Se conecta a PostgreSQL.
+    Devuelve respuestas en JSON.
+
+frontend/
+
+    Contiene la app de escritorio hecha en Go.
+    La app muestra una ventana con tablas, formularios y botones.
+    Permite interactuar con empleados y clientes.
+    No se conecta directamente a PostgreSQL: se conecta a la API.
+
+database/
+
+    Contiene el archivo init.sql.
+    Ese archivo crea las tablas de la base de datos y agrega datos de prueba.
+
+docker/
+
+    Contiene notas relacionadas con Docker.
+
+.github/workflows/
+
+    Contiene el workflow de GitHub Actions.
+    Sirve para probar y compilar automaticamente el proyecto cuando se sube a GitHub.
+
+
+6. BASE DE DATOS
+
+La base de datos usada es PostgreSQL.
+
+Nombre de la base:
+
+    empresa
+
+Usuario:
+
+    postgres
+
+Contrasena:
+
+    admin123
+
+Puerto en Windows:
+
+    5442
+
+Puerto interno del contenedor:
+
+    5432
+
+Las tablas principales son:
+
+    employees
+    titles
+    salaries
+    usuarios
+    clientes
+
+
+7. TABLAS DEL PROYECTO
+
+Tabla employees:
+
+    Guarda los empleados.
+
+Campos:
+
+    emp_no
+    first_name
+    last_name
+    birth_date
+    gender
+    hire_date
+
+Tabla titles:
+
+    Guarda los puestos o titulos laborales de un empleado.
+
+Campos:
+
+    id
+    emp_no
+    title
+    from_date
+    to_date
+
+Tabla salaries:
+
+    Guarda el historial de salarios de un empleado.
+
+Campos:
+
+    id
+    emp_no
+    salary
+    from_date
+    to_date
+
+Tabla usuarios:
+
+    Guarda el usuario relacionado con un empleado.
+
+Campos:
+
+    id
+    correo
+    contrasena
+    rol
+    empleado_id
+
+Tabla clientes:
+
+    Guarda clientes del sistema.
+
+Campos:
+
+    id
+    nombre
+    apellido
+    correo
+    telefono
+    direccion
+    created_at
+
+
+8. BACKEND API
+
+El backend esta en:
+
+    backend/main.go
+
+Funciones principales:
+
+    crearEmpleado
+    obtenerEmpleados
+    obtenerEmpleadoPorID
+    actualizarEmpleado
+    eliminarEmpleado
+    buscarEmpleado
+    obtenerTitulos
+    obtenerSalarios
+    obtenerUsuario
+    crearCliente
+    obtenerClientes
+    obtenerClientePorID
+    actualizarCliente
+    eliminarCliente
+    buscarCliente
+
+El backend escucha en:
+
+    http://localhost:8090
+
+El backend se conecta a PostgreSQL usando:
+
+    DATABASE_URL
+
+Dentro de Docker Compose se usa:
+
+    postgres://postgres:admin123@db:5432/empresa?sslmode=disable
+
+
+9. ENDPOINTS DE EMPLEADOS
+
+Crear empleado:
+
+    POST /empleados
+
+Listar empleados:
+
+    GET /empleados
+
+Buscar empleado por ID:
+
+    GET /empleados/{id}
+
+Actualizar empleado:
+
+    PUT /empleados/{id}
+
+Eliminar empleado:
+
+    DELETE /empleados/{id}
+
+Buscar empleado por nombre:
+
+    GET /empleados/buscar?nombre=texto
+
+Consultar titulos:
+
+    GET /empleados/{id}/titulos
+
+Consultar salarios:
+
+    GET /empleados/{id}/salarios
+
+Consultar usuario:
+
+    GET /empleados/{id}/usuario
+
+
+10. ENDPOINTS DE CLIENTES
+
+Crear cliente:
+
+    POST /clientes
+
+Listar clientes:
+
+    GET /clientes
+
+Buscar cliente por ID:
+
+    GET /clientes/{id}
+
+Actualizar cliente:
+
+    PUT /clientes/{id}
+
+Eliminar cliente:
+
+    DELETE /clientes/{id}
+
+Buscar cliente por nombre:
+
+    GET /clientes/buscar?nombre=texto
+
+
+11. CLIENTE DE ESCRITORIO
+
+El cliente esta en:
+
+    frontend/main.go
+
+Es una aplicacion de escritorio para Windows hecha en Go usando la libreria walk.
+
+La app tiene:
+
+    Pestaña Empleados
+    Pestaña Clientes
+    Tabla/listado de registros
+    Formulario de captura
+    Boton Recargar
+    Boton Buscar
+    Boton Crear nuevo
+    Boton Guardar cambios
+    Boton Eliminar seleccionado
+    Botones para consultar titulos, salarios y usuario
+    Panel de estado y respuesta JSON
+
+Flujo recomendado:
+
+    1. Abrir la app.
+    2. Presionar Recargar.
+    3. Seleccionar una fila de la tabla.
+    4. Revisar que el formulario se llene automaticamente.
+    5. Editar campos si se desea actualizar.
+    6. Presionar Guardar cambios.
+    7. Para eliminar, seleccionar una fila y presionar Eliminar seleccionado.
+
+
+12. NORMALIZACION DE DATOS
+
+La API acepta datos mas faciles para el usuario.
+
+Genero:
+
+    F
+    M
+    Femenino
+    Masculino
+    Mujer
+    Hombre
+
+La API convierte:
+
+    Femenino -> F
+    Masculino -> M
+
+Fechas:
+
+    YYYY-MM-DD
+    DD-MM-YY
+    DD-MM-YYYY
+    DD/MM/YY
+    DD/MM/YYYY
+    Hoy
+    Inmediata
+
+Ejemplo:
+
+    10-12-20 -> 2020-12-10
+    Inmediata -> fecha actual
+
+
+13. DOCKER
+
+El archivo principal es:
+
+    docker-compose.yml
+
+Servicios:
+
+    db  = PostgreSQL
+    api = API Go
+
+Comando para levantar:
+
+    docker compose up -d --build
+
+Comando para apagar:
+
+    docker compose down
+
+Comando para apagar y borrar la base:
+
+    docker compose down -v
+
+
+14. PRUEBAS
+
+Se pueden hacer pruebas de 3 formas:
+
+    1. Desde la app de escritorio.
+    2. Desde CMD con curl.
+    3. Desde VSCode con pruebas.http.
+
+La forma mas directa para revisar si la API funciona es:
+
+    curl http://localhost:8090/empleados
+
+Si responde una lista JSON, la API esta funcionando.
+
+
+15. GITHUB ACTIONS
+
+El archivo esta en:
+
+    .github/workflows/ci.yml
+
+Sirve para:
+
+    Probar backend
+    Compilar backend
+    Probar frontend
+    Compilar frontend
+    Validar Docker Compose
+
+Se ejecuta automaticamente cuando se hace push a GitHub.
+
+
+16. ESTADO FUNCIONAL
+
+El proyecto permite:
+
+    Crear empleados
+    Listar empleados
+    Buscar empleados por ID
+    Buscar empleados por nombre
+    Actualizar empleados
+    Eliminar empleados
+    Consultar titulos
+    Consultar salarios
+    Consultar usuario relacionado
+    Crear clientes
+    Listar clientes
+    Buscar clientes por ID
+    Buscar clientes por nombre
+    Actualizar clientes
+    Eliminar clientes
+
+El proyecto esta listo para probarse localmente y subirse a GitHub.
+

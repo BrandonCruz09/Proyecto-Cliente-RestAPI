@@ -1,0 +1,80 @@
+### Listar empleados
+GET http://localhost:8090/empleados
+
+### Crear empleado
+POST http://localhost:8090/empleados
+Content-Type: application/json
+
+{
+  "first_name": "Diana",
+  "last_name": "Ramirez",
+  "birth_date": "1996-07-20",
+  "gender": "F",
+  "hire_date": "2025-01-15"
+}
+
+### Buscar empleado por ID
+GET http://localhost:8090/empleados/1
+
+### Buscar empleado por nombre
+GET http://localhost:8090/empleados/buscar?nombre=Juan
+
+### Actualizar empleado
+PUT http://localhost:8090/empleados/1
+Content-Type: application/json
+
+{
+  "first_name": "Juan",
+  "last_name": "Perez Gomez",
+  "birth_date": "1990-01-01",
+  "gender": "M",
+  "hire_date": "2020-05-15"
+}
+
+### Eliminar empleado
+DELETE http://localhost:8090/empleados/3
+
+### Titulos de empleado
+GET http://localhost:8090/empleados/1/titulos
+
+### Salarios de empleado
+GET http://localhost:8090/empleados/1/salarios
+
+### Usuario relacionado con empleado
+GET http://localhost:8090/empleados/1/usuario
+
+### Listar clientes
+GET http://localhost:8090/clientes
+
+### Crear cliente
+POST http://localhost:8090/clientes
+Content-Type: application/json
+
+{
+  "nombre": "Sofia",
+  "apellido": "Castillo",
+  "correo": "sofia.castillo@cliente.com",
+  "telefono": "555-444-5555",
+  "direccion": "Calle Primavera 77"
+}
+
+### Buscar cliente por ID
+GET http://localhost:8090/clientes/1
+
+### Buscar cliente por nombre
+GET http://localhost:8090/clientes/buscar?nombre=Maria
+
+### Actualizar cliente
+PUT http://localhost:8090/clientes/1
+Content-Type: application/json
+
+{
+  "nombre": "Maria",
+  "apellido": "Gomez Lopez",
+  "correo": "maria.gomez@cliente.com",
+  "telefono": "555-100-2000",
+  "direccion": "Av. Central 123"
+}
+
+### Eliminar cliente
+DELETE http://localhost:8090/clientes/3

@@ -1,0 +1,440 @@
+EXPLICACION DEL PROYECTO
+Sistema CRUD con Go, PostgreSQL, Docker y cliente de escritorio
+
+1. DONDE SE DESCARGO LA BASE DE DATOS
+
+La base de datos usada en el proyecto es PostgreSQL.
+
+No se descargo una base de datos ya hecha desde internet. En este proyecto la base de datos se crea automaticamente usando Docker y el archivo SQL del proyecto.
+
+La imagen oficial de PostgreSQL se descarga desde Docker Hub cuando se ejecuta Docker Compose:
+
+    docker compose up --build
+
+En el archivo docker-compose.yml se indica esta imagen:
+
+    postgres:17.9
+
+Docker descarga esa imagen de PostgreSQL y luego crea una base de datos llamada:
+
+    empresa
+
+Las tablas y los datos de prueba se cargan desde este archivo:
+
+    database/init.sql
+
+Ese archivo contiene las instrucciones CREATE TABLE e INSERT INTO necesarias para crear:
+
+    employees
+    titles
+    salaries
+    usuarios
+    clientes
+
+Por eso, la base de datos no se descarga como archivo externo. Se genera localmente en el contenedor de Docker usando PostgreSQL 17.9 y el script init.sql.
+
+
+2. QUE SE USO PARA PODERLA VISUALIZAR
+
+Para visualizar o revisar la base de datos se pueden usar varias opciones.
+
+En este proyecto se puede visualizar desde consola usando psql, que es la herramienta de PostgreSQL para consultar bases de datos.
+
+Comando para entrar a PostgreSQL dentro del contenedor:
+
+    docker compose exec db psql -U postgres -d empresa
+
+Despues, dentro de psql, se pueden usar estos comandos:
+
+    \dt
+    SELECT * FROM employees;
+    SELECT * FROM titles;
+    SELECT * FROM salaries;
+    SELECT * FROM usuarios;
+    SELECT * FROM clientes;
+
+Tambien se puede visualizar usando herramientas graficas como:
+
+    pgAdmin
+    DBeaver
+    TablePlus
+    DataGrip
+
+Los datos de conexion son:
+
+    Host: localhost
+    Puerto: 5442
+    Base de datos: empresa
+    Usuario: postgres
+    Contrasena: admin123
+
+En este proyecto la API tambien ayuda a visualizar datos, porque devuelve la informacion en formato JSON. Por ejemplo:
+
+    http://localhost:8090/empleados
+
+
+3. LO QUE HACE LA API
+
+La API es el servidor del sistema.
+
+Esta hecha en Go y se encarga de recibir peticiones del cliente, consultar o modificar la base de datos PostgreSQL y devolver respuestas en formato JSON.
+
+La API permite hacer CRUD de empleados.
+
+CRUD significa:
+
+    C = Create  = Crear
+    R = Read    = Leer o consultar
+    U = Update  = Actualizar
+    D = Delete  = Eliminar
+
+La API permite:
+
+    Crear empleados
+    Listar empleados
+    Buscar empleados por ID
+    Buscar empleados por nombre
+    Actualizar empleados
+    Eliminar empleados
+    Consultar titulos de un empleado
+    Consultar salarios de un empleado
+    Consultar usuario relacionado con un empleado
+    Crear, listar, buscar, actualizar y eliminar clientes
+
+Endpoints principales de empleados:
+
+    POST   /empleados
+    GET    /empleados
+    GET    /empleados/{id}
+    PUT    /empleados/{id}
+    DELETE /empleados/{id}
+    GET    /empleados/buscar?nombre=
+    GET    /empleados/{id}/titulos
+    GET    /empleados/{id}/salarios
+    GET    /empleados/{id}/usuario
+
+Endpoints principales de clientes:
+
+    POST   /clientes
+    GET    /clientes
+    GET    /clientes/{id}
+    PUT    /clientes/{id}
+    DELETE /clientes/{id}
+    GET    /clientes/buscar?nombre=
+
+
+4. COMO FUNCIONA LA API
+
+La API funciona como intermediaria entre el cliente y PostgreSQL.
+
+Flujo general:
+
+    1. El usuario usa el cliente de escritorio.
+    2. El cliente envia una peticion HTTP a la API.
+    3. La API recibe la peticion.
+    4. La API interpreta el JSON recibido.
+    5. La API ejecuta una consulta SQL en PostgreSQL.
+    6. PostgreSQL devuelve los datos.
+    7. La API convierte la respuesta a JSON.
+    8. El cliente muestra la respuesta al usuario.
+
+Ejemplo para listar empleados:
+
+    1. El cliente llama a GET /empleados.
+    2. La API ejecuta SELECT en la tabla employees.
+    3. La API devuelve una lista de empleados en JSON.
+
+Ejemplo para crear empleado:
+
+    1. El cliente envia datos como nombre, apellido, fecha de nacimiento, genero y fecha de contratacion.
+    2. La API recibe el JSON.
+    3. La API ejecuta INSERT INTO employees.
+    4. PostgreSQL guarda el empleado.
+    5. La API responde el empleado creado.
+
+La API se conecta a PostgreSQL usando esta variable de entorno:
+
+    DATABASE_URL
+
+Dentro de Docker Compose se usa:
+
+    postgres://postgres:admin123@db:5432/empresa?sslmode=disable
+
+La API escucha en el puerto:
+
+    8090
+
+Por eso se puede probar desde el navegador o consola con:
+
+    http://localhost:8090/empleados
+
+
+5. COMO ES LA PARTE DEL CLIENTE
+
+El cliente es una aplicacion visual hecha en Go.
+
+Esta en el archivo:
+
+    frontend/main.go
+
+El cliente abre una ventana normal de Windows con una interfaz mas limpia y ordenada.
+
+La interfaz tiene:
+
+    Boton para modulo Empleados
+    Boton para modulo Clientes
+    Formulario para capturar datos
+    Botones para listar, buscar, crear, actualizar y eliminar
+    Botones para consultar titulos, salarios y usuario del empleado
+    Area grande para mostrar la respuesta JSON de la API
+    Barra de estado para mostrar mensajes al usuario
+
+El cliente no se conecta directamente a PostgreSQL.
+
+El cliente se conecta a la API usando HTTP.
+
+Ejemplo:
+
+    Si el usuario da clic en Listar empleados,
+    el cliente hace una peticion GET a:
+
+        http://localhost:8090/empleados
+
+    La API responde JSON.
+    El cliente muestra ese JSON en pantalla.
+
+Para ejecutar el cliente:
+
+    cd frontend
+    go run .
+
+Para compilarlo como ejecutable:
+
+    cd frontend
+    go build -o cliente-sistema.exe .
+
+Para abrirlo:
+
+    cliente-sistema.exe
+
+
+6. COMO FUNCIONAN LAS PRUEBAS DE CONSOLA
+
+Las pruebas de consola sirven para verificar que la API responda correctamente sin usar todavia el cliente grafico.
+
+Se hacen con curl desde CMD.
+
+Primero se levanta el proyecto:
+
+    docker compose up --build
+
+Luego se prueban los endpoints.
+
+Ejemplo para listar empleados:
+
+    curl http://localhost:8090/empleados
+
+Ejemplo para buscar empleado por ID:
+
+    curl http://localhost:8090/empleados/1
+
+Ejemplo para crear empleado:
+
+    curl -X POST http://localhost:8090/empleados -H "Content-Type: application/json" -d "{\"first_name\":\"Diana\",\"last_name\":\"Ramirez\",\"birth_date\":\"1996-07-20\",\"gender\":\"F\",\"hire_date\":\"2025-01-15\"}"
+
+Ejemplo para actualizar empleado:
+
+    curl -X PUT http://localhost:8090/empleados/1 -H "Content-Type: application/json" -d "{\"first_name\":\"Juan\",\"last_name\":\"Perez Gomez\",\"birth_date\":\"1990-01-01\",\"gender\":\"M\",\"hire_date\":\"2020-05-15\"}"
+
+Ejemplo para eliminar empleado:
+
+    curl -X DELETE http://localhost:8090/empleados/3
+
+Ejemplo para consultar titulos:
+
+    curl http://localhost:8090/empleados/1/titulos
+
+Ejemplo para consultar salarios:
+
+    curl http://localhost:8090/empleados/1/salarios
+
+Ejemplo para consultar usuario:
+
+    curl http://localhost:8090/empleados/1/usuario
+
+Tambien existe el archivo:
+
+    pruebas.http
+
+Ese archivo permite probar los endpoints desde Visual Studio Code usando la extension REST Client.
+
+
+7. EL CODIGO DE PROGRAMACION
+
+El codigo de programacion principal esta dividido en varias partes.
+
+Backend:
+
+    backend/main.go
+
+Aqui esta la API REST en Go. Este archivo contiene:
+
+    Modelos de datos
+    Conexion a PostgreSQL
+    Rutas HTTP
+    Controladores o handlers
+    Consultas SQL
+    Respuestas JSON
+
+Ejemplo de modelo de empleado:
+
+    type Empleado struct {
+        EmpNo     int    `json:"emp_no"`
+        FirstName string `json:"first_name"`
+        LastName  string `json:"last_name"`
+        BirthDate string `json:"birth_date"`
+        Gender    string `json:"gender"`
+        HireDate  string `json:"hire_date"`
+    }
+
+Ejemplo de ruta:
+
+    mux.HandleFunc("GET /empleados", obtenerEmpleados)
+
+Ejemplo de consulta SQL:
+
+    SELECT emp_no, first_name, last_name,
+           to_char(birth_date, 'YYYY-MM-DD'),
+           gender,
+           to_char(hire_date, 'YYYY-MM-DD')
+    FROM employees
+    ORDER BY emp_no
+
+Frontend:
+
+    frontend/main.go
+
+Aqui esta el cliente de escritorio. Este archivo contiene:
+
+    Creacion de la ventana
+    Campos del formulario
+    Botones
+    Eventos de botones
+    Peticiones HTTP a la API
+    Muestra de respuestas JSON
+
+Ejemplo de llamada desde el cliente:
+
+    ejecutar("GET", "/empleados", nil)
+
+Ejemplo de creacion de JSON:
+
+    data, err := json.Marshal(body)
+
+Base de datos:
+
+    database/init.sql
+
+Aqui esta el codigo SQL para crear tablas y datos de prueba.
+
+Ejemplo:
+
+    CREATE TABLE employees (
+        emp_no SERIAL PRIMARY KEY,
+        first_name VARCHAR(50) NOT NULL,
+        last_name VARCHAR(50) NOT NULL,
+        birth_date DATE NOT NULL,
+        gender CHAR(1) NOT NULL,
+        hire_date DATE NOT NULL
+    );
+
+Docker:
+
+    docker-compose.yml
+    backend/Dockerfile
+
+Estos archivos sirven para levantar PostgreSQL y la API en contenedores.
+
+GitHub Actions:
+
+    .github/workflows/ci.yml
+
+Este archivo sirve para validar automaticamente el proyecto cuando se sube a GitHub.
+
+
+8. USO DEL GO
+
+Go se usa como lenguaje principal del proyecto.
+
+En este sistema Go se usa para dos partes:
+
+    1. Backend o servidor API
+    2. cliente de escritorio
+
+En el backend, Go se usa para:
+
+    Crear el servidor HTTP
+    Definir endpoints REST
+    Leer y escribir JSON
+    Conectarse a PostgreSQL
+    Ejecutar consultas SQL
+    Responder al cliente
+
+Paquetes importantes usados en el backend:
+
+    net/http       -> crear servidor web y endpoints
+    encoding/json  -> convertir datos a JSON
+    database/sql   -> trabajar con base de datos
+    github.com/lib/pq -> driver para PostgreSQL
+    os             -> leer variables de entorno
+    log            -> mostrar mensajes en consola
+
+En el cliente, Go se usa para:
+
+    Crear la ventana de escritorio
+    Crear formularios y botones
+    Leer datos escritos por el usuario
+    Enviar peticiones HTTP a la API
+    Mostrar respuestas JSON
+
+Paquetes importantes usados en el cliente:
+
+    net/http       -> enviar peticiones a la API
+    encoding/json  -> convertir datos a JSON
+    github.com/lxn/win -> crear interfaz nativa de Windows
+    os             -> leer la URL de la API
+
+Comandos importantes de Go:
+
+Ver version instalada:
+
+    go version
+
+Ejecutar backend:
+
+    cd backend
+    go run .
+
+Compilar backend:
+
+    cd backend
+    go build -o server.exe .
+
+Ejecutar cliente:
+
+    cd frontend
+    go run .
+
+Compilar cliente:
+
+    cd frontend
+    go build -o cliente-sistema.exe .
+
+Ejecutar pruebas:
+
+    go test ./...
+
+Conclusion:
+
+Go permite que el proyecto tenga un servidor rapido, sencillo y ordenado, y tambien permite crear el cliente de escritorio que se comunica con la API.
+

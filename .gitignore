@@ -1,0 +1,7 @@
+.gocache/
+.gomodcache/
+.tools/
+frontend/cliente-sistema.exe
+frontend/startup-error.txt
+*.exe
+*.exe~

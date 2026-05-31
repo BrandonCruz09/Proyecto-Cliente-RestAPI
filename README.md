@@ -12,19 +12,6 @@ La idea principal es sencilla:
 
 ## 1. Explicacion del proyecto
 
-### Que es una REST API
-
-Una REST API es un programa servidor que recibe solicitudes por internet o por red local. En este proyecto la API esta hecha en Go y responde usando JSON.
-
-Ejemplo:
-
-- El cliente quiere listar empleados.
-- El cliente llama a `GET http://localhost:8090/empleados`.
-- La API consulta la tabla `employees`.
-- La API devuelve una lista en JSON.
-
-JSON es un formato de texto para enviar datos. Ejemplo:
-
 ```json
 {
   "first_name": "Diana",

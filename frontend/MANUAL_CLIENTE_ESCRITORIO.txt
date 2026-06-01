@@ -1,0 +1,130 @@
+MANUAL DE USO DEL CLIENTE DE ESCRITORIO
+
+   Archivo principal:
+
+       frontend/main.go
+
+   Ejecutable:
+
+       frontend/cliente-sistema.exe
+
+
+   1. COMO ABRIR LA APP
+
+   Primero levantar API y PostgreSQL:
+
+       docker compose up -d --build
+
+   Entrar a frontend:
+
+       cd frontend
+
+   Ejecutar:
+
+       go run .
+
+   O compilar:
+
+       go build -o cliente-sistema.exe .
+       cliente-sistema.exe
+
+
+   2. USO DE EMPLEADOS
+
+   Listar empleados:
+
+       1. Abrir la app.
+       2. Entrar a la pestana Empleados.
+       3. Presionar Recargar.
+       4. Revisar la tabla.
+
+   Crear empleado:
+
+       1. Presionar Limpiar.
+       2. Escribir Nombre.
+       3. Escribir Apellido.
+       4. Escribir Nacimiento.
+          Ejemplo: 1998-05-12
+       5. Escribir Genero.
+          Ejemplo: F, M, Femenino o Masculino.
+       6. Escribir Contratacion.
+          Ejemplo: Hoy, Inmediata o 2024-02-01.
+       7. Presionar Crear nuevo.
+
+   Actualizar empleado:
+
+       1. Presionar Recargar.
+       2. Seleccionar una fila.
+       3. Cambiar datos en el formulario.
+       4. Presionar Guardar cambios.
+
+   Eliminar empleado:
+
+       1. Seleccionar una fila.
+       2. Presionar Eliminar seleccionado.
+       3. Confirmar.
+
+   Buscar empleado:
+
+       1. Escribir nombre o apellido en Buscar por nombre.
+       2. Presionar Buscar.
+
+   Consultar historial:
+
+       1. Seleccionar empleado.
+       2. Presionar Titulos, Salarios o Usuario.
+
+
+   3. USO DE CLIENTES
+
+   Listar clientes:
+
+       1. Entrar a Clientes.
+       2. Presionar Recargar.
+
+   Crear cliente:
+
+       1. Presionar Limpiar.
+       2. Escribir Nombre.
+       3. Escribir Apellido.
+       4. Escribir Correo.
+       5. Escribir Telefono.
+       6. Escribir Direccion.
+       7. Presionar Crear nuevo.
+
+   Actualizar cliente:
+
+       1. Seleccionar una fila.
+       2. Editar formulario.
+       3. Presionar Guardar cambios.
+
+   Eliminar cliente:
+
+       1. Seleccionar cliente.
+       2. Presionar Eliminar seleccionado.
+       3. Confirmar.
+
+   Buscar cliente:
+
+       1. Escribir nombre o apellido.
+       2. Presionar Buscar.
+
+
+   4. ERRORES COMUNES
+
+   Si no conecta:
+
+       docker compose ps
+       curl http://localhost:8090/empleados
+
+   Si Docker no responde:
+
+       Abrir Docker Desktop y esperar a que inicie.
+
+   Si falla fecha:
+
+       Usar YYYY-MM-DD, DD-MM-YY, DD-MM-YYYY, Hoy o Inmediata.
+
+   Si falla genero:
+
+       Usar F, M, Femenino o Masculino.

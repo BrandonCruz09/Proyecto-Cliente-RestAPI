@@ -1,0 +1,75 @@
+PLAN DE PRUEBAS MANUALES
+
+Objetivo:
+
+    Comprobar que el CRUD funciona desde la API y desde la app de escritorio.
+
+
+1. PREPARACION
+
+Levantar proyecto:
+
+    docker compose up -d --build
+
+Ver contenedores:
+
+    docker compose ps
+
+
+2. PRUEBAS DE API
+
+Listar empleados:
+
+    curl http://localhost:8090/empleados
+
+Crear empleado:
+
+    curl -X POST http://localhost:8090/empleados -H "Content-Type: application/json" -d "{\"first_name\":\"Prueba\",\"last_name\":\"Manual\",\"birth_date\":\"10-12-20\",\"gender\":\"Femenino\",\"hire_date\":\"Inmediata\"}"
+
+Buscar empleado:
+
+    curl "http://localhost:8090/empleados/buscar?nombre=Prueba"
+
+Listar clientes:
+
+    curl http://localhost:8090/clientes
+
+Crear cliente:
+
+    curl -X POST http://localhost:8090/clientes -H "Content-Type: application/json" -d "{\"nombre\":\"Cliente\",\"apellido\":\"Manual\",\"correo\":\"cliente.manual@correo.com\",\"telefono\":\"555-123\",\"direccion\":\"Calle Prueba 123\"}"
+
+
+3. PRUEBAS DE APP
+
+Abrir app:
+
+    cd frontend
+    go run .
+
+Prueba empleados:
+
+    1. Presionar Recargar.
+    2. Seleccionar empleado.
+    3. Modificar apellido.
+    4. Presionar Guardar cambios.
+    5. Crear empleado de prueba.
+    6. Eliminar empleado de prueba.
+
+Prueba clientes:
+
+    1. Entrar a Clientes.
+    2. Presionar Recargar.
+    3. Crear cliente.
+    4. Actualizar cliente.
+    5. Eliminar cliente.
+
+
+4. EVIDENCIAS RECOMENDADAS
+
+Capturar pantalla de:
+
+    docker compose ps
+    curl http://localhost:8090/empleados
+    App con empleados cargados
+    App con clientes cargados
+    GitHub Actions en verde
